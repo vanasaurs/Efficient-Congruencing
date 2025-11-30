@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes on Efficient Congruencing</title>
+    
+    <style>
+        body {
+            font-family: "Georgia", "Times New Roman", Times, serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: #f9f9f9;
+        }
+        
+        .paper-container {
+            background-color: #fff;
+            padding: 50px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* Math Display Styling */
+        .math-display {
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+    </style>
+
+    <script>
+    window.MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            macros: {
+                e: "\\mathrm{e}",
+                Z: "\\mathbb{Z}",
+                R: "\\mathbb{R}"
+                // Removed the recursive 'boldsymbol' definition
+            }
+        }
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<div class="paper-container">
+
+    <h1>Notes on Efficient Congruencing</h1>
+
+    <p>This note discusses the idea of efficient congruencing related to Vinogradov's mean value theorem. This method is really similar to $p$–adic concepts but replaces them with Archimedean counterparts. Also, both papers contain an iterative analysis. This is due to the original congruence modulo $p^a$ not being that powerful; we raise the power of $p$ and repeat the lifting process; hence, it is an iterative process.</p>
+
+    <p>The problem we are concerned with here is a mean value that also counts the number of solutions to the system of equations or congruences. As in the typical Vinogradov's mean value theorem, let $k\in\mathbb{N}$ and $\boldsymbol{\alpha}\in\R^k$; we consider the mean value
+    \[
+      J_{s,k}(X)
+      \;=\;
+      \int_{[0,1)^k} \bigl|f_k(\boldsymbol{\alpha};X)\bigr|^{2s}\, d\boldsymbol{\alpha},
+    \]
+    where
+    \[
+      f_k(\boldsymbol{\alpha};X)
+      = \sum_{1\le x\le X}
+        \e\bigl(\psi(x;\boldsymbol{\alpha})\bigr),\qquad
+      \psi(x;\boldsymbol{\alpha}) = \alpha_1 x + \cdots + \alpha_k x^k.
+    \]</p>
+
+    <p>It follows from the orthogonality that, for $s\in\mathbb{N}$, this mean value counts the number of integral solutions to the system of equations
+    \[
+      x_1^j + \cdots + x_s^j
+      \;=\;
+      y_1^j + \cdots + y_s^j
+      \qquad (1\le j\le k),
+    \]
+    with $1\le x_i,y_i \le X$.</p>
+
+    <p>For $f_k(\boldsymbol{\alpha};X)$, we sort the summation into arithmetic progressions modulo $p^c$, $c$ non–negative integers, and by Hölder's inequality, we now look at
+    \[
+      f_c(\boldsymbol{\alpha};\boldsymbol{\xi})
+      \;=\;
+      \sum_{\substack{1\le x\le X\\x\equiv \xi \,(\bmod p^c)}}
+        \e\bigl(\psi(x;\boldsymbol{\alpha})\bigr).
+    \]
+    For brevity, we write
+    \[
+      \int_{[0,1)^k} f(\boldsymbol{\alpha}) \, d\boldsymbol{\alpha}
+      \;=\;
+      \oint f(\boldsymbol{\alpha}) \, d\boldsymbol{\alpha}.
+    \]</p>
+
+    <p>We first look at the typical treatment by analyzing the following mean value
+    \[
+      \oint
+      \bigl|f(\boldsymbol{\alpha};X)\bigr|^{2k}
+      \bigl|f_1(\boldsymbol{\alpha};\boldsymbol{\xi})\bigr|^{2s}
+      \, d\boldsymbol{\alpha},
+    \]
+    which counts the number of integral solutions of the system
+    \[
+      \sum_{i=1}^k (x_i^j - y_i^j)
+      =
+      \sum_{\ell=1}^s \bigl((p u_\ell + \xi)^j - (p v_\ell + \xi)^j\bigr)
+      \qquad (1\le j\le k),
+    \]
+    with $1\le x_i,y_i\le X$ and $0\le u_\ell,v_\ell\le (X-\xi)/p$.</p>
+
+    <p>By writing $x = (x + \xi)-\xi, \text{and }  y = (y + \xi)-\xi,$ and taking a binomial expansion of this system,
+    \[
+      \sum_{i=1}^k \bigl( (x_i-\xi)^j - (y_i-\xi)^j \bigr)
+      =
+      p^j \sum_{\ell=1}^s \bigl( u_\ell^j - v_\ell^j \bigr)
+      \qquad (1\le j\le k),
+    \]
+    whence
+    \[
+      \sum_{i=1}^k (x_i-\xi)^j
+      \equiv
+      \sum_{i=1}^k (y_i-\xi)^j \pmod{p^j}
+      \qquad (1\le j\le k).
+    \]</p>
+
+    <p>This above congruence provides the efficient congruence condition, and by Hensel's lemma, for a well–conditioned set of $\mathbf{x}$, we have $\mathbf{n}\in\Z^k$ satisfying
+    \[
+      \sum_{i=1}^k (x_i-\xi)^j
+      \equiv
+      n_j \pmod{p}
+      \qquad (1\le j\le k).
+    \]
+    Then we have such $\mathbf{x}$ as a unique solution satisfying
+    \[
+      \sum_{i=1}^k (x_i-\xi)^j
+      \equiv
+      n_j \pmod{p^k}
+      \qquad (1\le j\le k).
+    \]</p>
+
+    <p>From the efficient congruence condition, we deduce that
+    \[
+      \mathbf{x} \equiv \boldsymbol{y} \pmod{p^k},
+    \]
+    with a multiplicity $k!\,p^{\frac12 k(k-1)}$. For classical argument, we let $p^k>X$; thus, we have $\mathbf{x}=\mathbf{y}$. It follows that the mean value we started with is
+    \[
+      \ll k!\,p^{\frac12 k(k-1)} X^k J_{s,k}\!\left(\frac{X}{p^c}\right).
+    \]</p>
+
+    <p>Thus, by choosing an appropriate $p$ and also noticing that such a mean value is closely related to $J_{s+k}(X)$, we started to build an iterative step. And if we replace $f(\boldsymbol{\alpha};X)$ with $f_k(\boldsymbol{\alpha};\boldsymbol{\eta})$, it provides a better estimation as we shall consider $\mathbf{x}\equiv \mathbf{y} \pmod{p^{k^2}}$ with multiplicity $k! \, p^{\frac12 (k+1)k(k-1)}$, and $J_s(X/p^k)$ in return by combining it with Hölder's inequality.</p>
+
+    <p>Eventually, when we work on a mean value, we could repeatedly multiply a $k$ factor by its congruence condition to create a new mean value. After all, if we can choose the initial condition and the recurrence condition nicely enough, we have an iterative process to bound.</p>
+
+    <p>Another way to utilize the efficient congruence condition is to explicitly ``nested'' within a mean value. We let $\varphi_j\in\Z[t]$ be $p^c$–spaced, meaning that
+    \[
+      \varphi_j(t) \equiv t^j \pmod{p^c}
+      \qquad (1\le j\le k).
+    \]
+    This family of systems $\varphi$ satisfies a translation–dilation property. While we are dealing with the number of integral solutions of
+    \[
+      \sum_{i=1}^k
+      \varphi_j\bigl(p^h z_i+\xi\bigr)
+      \equiv
+      \sum_{i=1}^k
+      \varphi_j\bigl(p^h y_i+\xi\bigr)
+      \pmod{p^B}
+      \qquad (1\le j\le k).
+    \]</p>
+
+    <p>Then, for suitable $\psi_j\in \Z[t]$, one may write
+    \[
+      \varphi_j(t)
+      =
+      \sum_{i=1}^k \omega_{ij} t^i
+      + p^c t^{k+1} \psi_j(t)
+      \qquad (1\le j\le k)
+    \]
+    for some integral coefficient matrix $A = (\omega_{ij}) \equiv I_k \pmod{p^c}$. Then $\det(A)\not\equiv 0 \pmod{p^c}$, $\det(A)\not\equiv 0 \pmod{p^B}$ for $B>c$, i.e.\ $A^{-1}$ modulo $p^B$ exists in $\Z/p^B\Z$. So that replacing $\varphi_j$ and $\psi_j$ with $A^{-1}\varphi_j$ and $A^{-1}\psi_j$, respectively, we deduce that
+    \[
+      \varphi_j(t) = t^j + p^c t^{k+1} \psi_j(t)
+      \qquad (1\le j\le k).
+    \]</p>
+
+    <p>Thus, by replacing $t$ with $p^h t+\xi$ and taking a binomial expansion, we find $\tilde{\gamma}_j\in\Z[t]$ and
+    \[
+      \varphi_j(p^h t+\xi) - \varphi_j(\xi) = \Phi_j(p^h t),
+    \]
+    in which
+    \[
+      \Phi_j(t)
+      =
+      \sum_{i=1}^k \Omega_{ij} t^i + p^c t^{k+1} \Psi_j(t)
+      \qquad (1\le j\le k),
+    \]
+    and the integral coefficients satisfy
+    \[
+      \Omega_{ij} \equiv \binom{j}{i} \pmod{p^c}
+      \qquad (1\le i,j\le k).
+    \]
+    Here, we adopt the convention that $\binom{i}{j} = 0$ if $i>j$.</p>
+
+    <p>Similarly, there would be $\Upsilon_j\in\Z[t]$ satisfying the initial congruence condition; then
+    \[
+      \sum_{i=1}^k
+     (p^h)^j \bigl(
+        \Phi_j(y_i) - \Phi_j(z_i)
+      \bigr)
+      \equiv 0 \pmod{p^B}
+      \qquad (1\le j\le k),
+    \]
+    in which $\Phi_j$ has been refined by
+    \[
+      \Phi_j(t)
+      =
+      t^j + p^{c+h} t^{k+1} \Upsilon_j(t).
+    \]</p>
+
+    <p>It follows that the congruence is
+    \[
+      \sum_{i=1}^k \Phi_j(y_i)
+      \equiv
+      \sum_{i=1}^k \Phi_j(z_i)
+      \pmod{p^{B-hk}}
+      \qquad (1\le j\le k).
+    \]
+    Therefore, whenever the original congruence condition is valid, this congruence condition follows implicitly. If we consider this as a mean value explicitly within the mean value that counts the solutions of the original congruence, it does not affect the value.</p>
+
+    <p>Therefore, if we sum over $\boldsymbol{\eta}$ with $\mathbf{y}\equiv\boldsymbol{\eta}\pmod{p^{H-h}}$, we have, for any $1\le\xi\le p^H$, $\xi = p^h \eta + \zeta$, indicating the summation over $p^h\eta + \xi \equiv \zeta \pmod{p^H}$ for all $y\in\Z$. Nevertheless, for the mean value subject to the implied congruence, it is considered to be satisfied; thus, letting $\boldsymbol{\beta} = 0$ for $e(\beta_1\Phi_1(\eta_i)+\cdots+\beta_k\Phi_k(\eta_i))$ is not problematic. Thus, we transfer the congruence modulo $p^h$ to modulo $p^H$.</p>
+
+    <p>This creates an iteration path. Moreover, if we take the same approach for any rational function whose Wronskian is non–zero modulo $p$, and we sum over an arithmetic progression modulo $p^c$, then we can link this system of rational functions to the system of $p^c$–spaced functions.</p>
+
+    <p>Hence, it completes the proof.</p>
+
+</div>
+
+</body>
+</html>
